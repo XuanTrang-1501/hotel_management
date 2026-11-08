@@ -1,9 +1,10 @@
 package com.hotel.service;
 
-import com.hotel.repository.UserRepository;
+import java.sql.SQLException;
+
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.sql.SQLException;
+import com.hotel.repository.UserRepository;
 
 
 public class AuthService {
@@ -18,7 +19,6 @@ public class AuthService {
     public Session login(String username, String password) throws SQLException {
         UserRepository.Account account = repository.findByUsername(username);
         if (account == null) return null;
-        // Chỉ so khớp hash BCrypt; không lưu mật khẩu dạng rõ trong database.
         if (!BCrypt.checkpw(password, account.passwordHash())) return null;
         return new Session(account.id(), account.username(), account.fullName(), account.role());
     }
